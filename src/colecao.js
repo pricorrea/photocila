@@ -21,7 +21,7 @@ export const PERFIL = {
   instagram: "@photocila",
   // Número no formato internacional, só dígitos: 55 + DDD + número.
   // Exemplo de SP: "5511999999999"
-  whatsapp: "5511999999999",
+  whatsapp: "5511977871502",
 };
 
 
@@ -86,7 +86,7 @@ export const COLECAO = [
     serie: "Território",
     texto:
       "A arquitetura como memória pública. O Theatro permanece — testemunha de um centro que insiste em ser de todos. Pedra, sombra e a luz baixa de fim de tarde.",
-    img: "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?q=80&w=1600&auto=format&fit=crop",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/Theatro_wamfvo",
   },
   {
     id: "leques-parada",
