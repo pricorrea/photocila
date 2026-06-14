@@ -21,7 +21,7 @@ export const PERFIL = {
   instagram: "@photocila",
   // Número no formato internacional, só dígitos: 55 + DDD + número.
   // Exemplo de SP: "5511999999999"
-  whatsapp: "5511999999999",
+  whatsapp: "5511977871502",
 };
 
 
