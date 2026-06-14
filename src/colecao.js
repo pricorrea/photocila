@@ -69,6 +69,16 @@ export const MOLDURAS = [
 // ───────────────────────────────────────────────────────────────────
 export const COLECAO = [
   {
+    id: "theatro-municipal",
+    titulo: "Theatro Municipal",
+    local: "São Paulo, SP",
+    ano: 2025,
+    serie: "Território",
+    texto:
+      "A arquitetura como memória pública. O Theatro permanece — testemunha de um centro que insiste em ser de todos. Pedra, sombra e a luz baixa de fim de tarde.",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/Theatro_wamfvo",
+  },
+  {
     id: "reflexo-paulista",
     titulo: "Reflexo na Avenida Paulista",
     local: "São Paulo, SP",
@@ -77,16 +87,6 @@ export const COLECAO = [
     texto:
       "Durante a SP Pride, a cidade se dobra sobre si mesma. O vidro de um edifício devolve a multidão à rua. Quem ocupa também é ocupado pelo espaço — presença que recusa o esquecimento.",
     img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1600&auto=format&fit=crop",
-  },
-  {
-    id: "theatro-municipal",
-    titulo: "Theatro Municipal",
-    local: "São Paulo, SP",
-    ano: 2025,
-    serie: "Território",
-    texto:
-      "A arquitetura como memória pública. O Theatro permanece — testemunha de um centro que insiste em ser de todos. Pedra, sombra e a luz baixa de fim de tarde.",
-    img: "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?q=80&w=1600&auto=format&fit=crop",
   },
   {
     id: "leques-parada",
