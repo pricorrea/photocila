@@ -69,6 +69,16 @@ export const MOLDURAS = [
 // ───────────────────────────────────────────────────────────────────
 export const COLECAO = [
   {
+    id: "luta-em-festa",
+    titulo: "Luta em Festa",
+    local: "São Paulo, SP",
+    ano: 2025,
+    serie: "Orgulho",
+    texto:
+      "Os leques abertos contra o sol, a multidão que ocupa a avenida. Aqui a luta não pede licença: ela vira festa, e a festa vira território. Presença coletiva que recusa o apagamento — o corpo na rua como manifesto.",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/_MG_1532_j5ea1j",
+  },
+  {
     id: "theatro-municipal",
     titulo: "Theatro Municipal",
     local: "São Paulo, SP",
@@ -76,46 +86,26 @@ export const COLECAO = [
     serie: "Território",
     texto:
       "A arquitetura como memória pública. O Theatro permanece — testemunha de um centro que insiste em ser de todos. Pedra, sombra e a luz baixa de fim de tarde.",
-    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/Theatro_wamfvo",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/Theatro_akmem3",
   },
   {
-    id: "reflexo-paulista",
-    titulo: "Reflexo na Avenida Paulista",
+    id: "rastros-em-movimento",
+    titulo: "Rastros em Movimento",
+    local: "São Paulo, SP",
+    ano: 2026,
+    serie: "Um Olhar em Movimento",
+    texto:
+      "O corpo que atravessa deixa rastro. A imagem não congela o instante — ela testemunha a travessia. Luz como memória viva, tempo que respira dentro do quadro.",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/20260309_183622_zgywh1",
+  },
+  {
+    id: "reflexos-da-noite",
+    titulo: "Reflexos da Noite",
     local: "São Paulo, SP",
     ano: 2025,
-    serie: "SP Pride",
+    serie: "Um Olhar em Movimento",
     texto:
-      "Durante a SP Pride, a cidade se dobra sobre si mesma. O vidro de um edifício devolve a multidão à rua. Quem ocupa também é ocupado pelo espaço — presença que recusa o esquecimento.",
-    img: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1600&auto=format&fit=crop",
-  },
-  {
-    id: "leques-parada",
-    titulo: "Leques da Parada",
-    local: "São Paulo, SP",
-    ano: 2025,
-    serie: "Afeto coletivo",
-    texto:
-      "Gesto e som. O leque abre o ar e marca o corpo no espaço. Afeto que se faz coletivo, território que se faz festa.",
-    img: "https://images.unsplash.com/photo-1561612217-e1d5e3a9b8d6?q=80&w=1600&auto=format&fit=crop",
-  },
-  {
-    id: "salvador",
-    titulo: "Salvador",
-    local: "Salvador, BA",
-    ano: 2024,
-    serie: "Território",
-    texto:
-      "A primeira capital, a luz dura do Nordeste. Salvador como raiz e como presente — memória negra que ocupa e resiste no cotidiano da cidade.",
-    img: "https://images.unsplash.com/photo-1574870111867-089730e5a72b?q=80&w=1600&auto=format&fit=crop",
-  },
-  {
-    id: "bandeira-manifestacao",
-    titulo: "Bandeira em manifestação",
-    local: "São Paulo, SP",
-    ano: 2025,
-    serie: "Presença",
-    texto:
-      "O pano levantado contra o céu. A bandeira não decora: convoca. Registro de um instante em que o corpo coletivo toma a rua e o ar.",
-    img: "https://images.unsplash.com/photo-1591189824344-9c4f2e2a5e2b?q=80&w=1600&auto=format&fit=crop",
+      "A cidade noturna se duplica na água e na luz. Reflexo é também resistência: o que se vê duas vezes não se esquece. Atmosfera, deslocamento, a noite como matéria visual.",
+    img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/20251212_192918_xuvsy6",
   },
 ];
