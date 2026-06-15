@@ -72,7 +72,7 @@ export const COLECAO = [
     id: "luta-em-festa",
     titulo: "Luta em Festa",
     local: "São Paulo, SP",
-    ano: 2025,
+    ano: 2026,
     serie: "Orgulho",
     texto:
       "Os leques abertos contra o sol, a multidão que ocupa a avenida. Aqui a luta não pede licença: ela vira festa, e a festa vira território. Presença coletiva que recusa o apagamento — o corpo na rua como manifesto.",
@@ -102,7 +102,7 @@ export const COLECAO = [
     id: "reflexos-da-noite",
     titulo: "Reflexos da Noite",
     local: "São Paulo, SP",
-    ano: 2025,
+    ano: 2026,
     serie: "Um Olhar em Movimento",
     texto:
       "A cidade noturna se duplica na água e na luz. Reflexo é também resistência: o que se vê duas vezes não se esquece. Atmosfera, deslocamento, a noite como matéria visual.",
