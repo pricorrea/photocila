@@ -264,8 +264,9 @@ function PhotoPage({ photo, nav }) {
   const [mol, setMol] = useState(MOLDURAS[0]);
   if (!photo) return null;
 
-  const total  = tam.preco + mol.add;
-  const serie  = SERIES.find((s) => s.id === photo.serieId);
+  const total      = tam.preco + mol.add;
+  const acombinar  = tam.acombinar;
+  const serie      = SERIES.find((s) => s.id === photo.serieId);
   const outras = COLECAO.filter((p) => p.id !== photo.id && p.serieId === photo.serieId).slice(0, 2);
 
   return (
@@ -303,7 +304,9 @@ function PhotoPage({ photo, nav }) {
 
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
             <span style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.5 }}>{tam.dim !== "—" ? tam.dim : "Polaroid"}</span>
-            <span style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 500 }}>{brl(total)}</span>
+            <span style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 500 }}>
+              {acombinar ? "A combinar" : brl(total)}
+            </span>
           </div>
 
           <a href={linkWhatsApp(photo, tam, mol, total)} target="_blank" rel="noopener noreferrer"

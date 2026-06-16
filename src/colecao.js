@@ -33,10 +33,12 @@ export const PERFIL = {
 //  2. TAMANHOS  — edite os preços (em reais) à vontade
 // ───────────────────────────────────────────────────────────────────
 export const TAMANHOS = [
-  { id: "polaroid", label: "Polaroid",   dim: "—",            preco: 45  },
-  { id: "10x15",    label: "10 × 15 cm", dim: "10 × 15 cm",   preco: 90  },
-  { id: "a4",       label: "A4",         dim: "21 × 29,7 cm", preco: 180 },
-  { id: "a3",       label: "A3",         dim: "29,7 × 42 cm", preco: 320 },
+  { id: "polaroid",      label: "Polaroid",        dim: "—",            preco: 45,  acombinar: false },
+  { id: "10x15",         label: "10 × 15 cm",      dim: "10 × 15 cm",   preco: 90,  acombinar: false },
+  { id: "a4",            label: "A4",               dim: "21 × 29,7 cm", preco: 180, acombinar: false },
+  { id: "a3",            label: "A3",               dim: "29,7 × 42 cm", preco: 320, acombinar: false },
+  // Tamanho personalizado: preco é ignorado, o valor aparece como "A combinar"
+  { id: "personalizado", label: "Personalizado",    dim: "A combinar",   preco: 0,   acombinar: true  },
 ];
 
 
@@ -44,9 +46,10 @@ export const TAMANHOS = [
 //  3. MOLDURAS  — "add" é o valor somado ao preço do tamanho
 // ───────────────────────────────────────────────────────────────────
 export const MOLDURAS = [
-  { id: "none",  label: "Sem moldura",    add: 0   },
-  { id: "black", label: "Moldura preta",  add: 120 },
-  { id: "white", label: "Moldura branca", add: 120 },
+  { id: "none",   label: "Sem moldura",      add: 0   },
+  { id: "black",  label: "Moldura preta",    add: 120 },
+  { id: "white",  label: "Moldura branca",   add: 120 },
+  { id: "natural", label: "Moldura natural", add: 120 },
 ];
 
 
