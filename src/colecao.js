@@ -10,6 +10,13 @@
 //  Eles são a "pontuação" que o site usa para entender os dados.
 //  Se algo quebrar, geralmente é uma vírgula faltando ou sobrando.
 //
+//  ─────────────────────────────────────────────────────────────────
+//  PRINCÍPIO: a obra vem antes do produto.
+//  Uma fotografia existe no arquivo independentemente de estar à
+//  venda ou de estar publicada. Os campos "visivel" e "venda"
+//  existem para garantir isso.
+//  ─────────────────────────────────────────────────────────────────
+//
 // ═══════════════════════════════════════════════════════════════════
 
 
@@ -32,13 +39,17 @@ export const PERFIL = {
 // ───────────────────────────────────────────────────────────────────
 //  2. TAMANHOS  — edite os preços (em reais) à vontade
 // ───────────────────────────────────────────────────────────────────
+//  O tamanho marcado com "padrao: true" é o que aparece selecionado
+//  quando alguém abre uma obra — ou seja, é o preço-âncora que a
+//  pessoa vê primeiro. Escolha consciente, não a ordem da lista.
+// ───────────────────────────────────────────────────────────────────
 export const TAMANHOS = [
   { id: "polaroid",      label: "Polaroid",        dim: "—",            preco: 45,  acombinar: false },
   { id: "10x15",         label: "10 × 15 cm",      dim: "10 × 15 cm",   preco: 90,  acombinar: false },
-  { id: "a4",            label: "A4",               dim: "21 × 29,7 cm", preco: 180, acombinar: false },
-  { id: "a3",            label: "A3",               dim: "29,7 × 42 cm", preco: 320, acombinar: false },
+  { id: "a4",            label: "A4",              dim: "21 × 29,7 cm", preco: 180, acombinar: false, padrao: true },
+  { id: "a3",            label: "A3",              dim: "29,7 × 42 cm", preco: 320, acombinar: false },
   // Tamanho personalizado: preco é ignorado, o valor aparece como "A combinar"
-  { id: "personalizado", label: "Personalizado",    dim: "A combinar",   preco: 0,   acombinar: true  },
+  { id: "personalizado", label: "Personalizado",   dim: "A combinar",   preco: 0,   acombinar: true  },
 ];
 
 
@@ -46,15 +57,15 @@ export const TAMANHOS = [
 //  3. MOLDURAS  — "add" é o valor somado ao preço do tamanho
 // ───────────────────────────────────────────────────────────────────
 export const MOLDURAS = [
-  { id: "none",   label: "Sem moldura",      add: 0   },
-  { id: "black",  label: "Moldura preta",    add: 120 },
-  { id: "white",  label: "Moldura branca",   add: 120 },
+  { id: "none",    label: "Sem moldura",     add: 0   },
+  { id: "black",   label: "Moldura preta",   add: 120 },
+  { id: "white",   label: "Moldura branca",  add: 120 },
   { id: "natural", label: "Moldura natural", add: 120 },
 ];
 
 
 // ───────────────────────────────────────────────────────────────────
-//  4. SÉRIES TEMÁTICAS
+//  4. SÉRIES
 // ───────────────────────────────────────────────────────────────────
 //
 //  Cada série é uma "gaveta" que agrupa fotografias por tema.
@@ -73,6 +84,13 @@ export const MOLDURAS = [
 //    id          → identificador único (sem espaços, sem acentos)
 //    nome        → nome exibido na galeria
 //    descricao   → texto curto de apresentação da série (1-2 frases)
+//    publicada   → true  = a série aparece no site
+//                  false = a série existe aqui como intenção, mas o
+//                          visitante não a vê. Use para séries que
+//                          ainda não têm obra suficiente.
+//
+//  Uma série sem fotografias NÃO deve ficar publicada: cinco cards
+//  dizendo "em breve" fazem o projeto parecer parado.
 //
 // ───────────────────────────────────────────────────────────────────
 export const SERIES = [
@@ -80,31 +98,37 @@ export const SERIES = [
     id: "presenca-e-territorio",
     nome: "Presença e Território",
     descricao: "Imagens sobre corpos que ocupam espaços públicos — a cidade como palco de resistência e pertencimento.",
+    publicada: true,
   },
   {
     id: "vestigios",
     nome: "Vestígios",
     descricao: "O que permanece depois que as pessoas partem. Marcas, rastros, sinais de presença em espaços que guardam memória.",
+    publicada: false,
   },
   {
     id: "afetos",
     nome: "Afetos",
     descricao: "Encontros, gestos e laços capturados no instante em que acontecem. O afeto como forma de habitar o mundo.",
+    publicada: false,
   },
   {
     id: "resistencia",
     nome: "Resistência",
     descricao: "Corpos e vozes que persistem. Fotografias de movimentos, celebrações e disputas pelo direito de existir.",
+    publicada: false,
   },
   {
     id: "palco",
     nome: "Palco",
     descricao: "Performances, rituais e cenas onde o cotidiano se transforma em espetáculo. A vida como encenação.",
+    publicada: false,
   },
   {
     id: "devaneios-manuscritos",
     nome: "Devaneios Manuscritos",
     descricao: "Uma série especial que entrelaça fotografia e escrita. Imagens que carregam texto — ou textos que viram imagem.",
+    publicada: false,
   },
 ];
 
@@ -122,10 +146,6 @@ export const SERIES = [
 //  Para REMOVER uma foto: apague o bloco { ... } inteiro
 //    (e a vírgula que sobrar antes ou depois).
 //
-//  Para ADICIONAR uma foto a uma série nova:
-//    Basta preencher o campo serieId com o id da série desejada
-//    (exatamente como está escrito na seção SERIES acima).
-//
 //  O que cada campo significa:
 //    id       → identificador único, sem espaços nem acentos (ex: "reflexo-paulista")
 //    titulo   → nome da obra
@@ -134,6 +154,27 @@ export const SERIES = [
 //    serieId  → a qual série pertence — deve ser igual ao "id" de uma série em SERIES
 //    texto    → texto curatorial curto, na sua voz
 //    img      → link da imagem (cole aqui o link gerado pelo Cloudinary)
+//
+//    visivel  → true  = a fotografia aparece no site
+//               false = a fotografia existe no arquivo e NÃO é exibida.
+//
+//               Este é o estado ARQUIVO: a obra existe, foi catalogada,
+//               tem texto — e não circula. Use quando houver dúvida
+//               sobre expor quem está na imagem, quando a edição ainda
+//               não estiver madura, ou quando a foto for guardada para
+//               uma exposição futura.
+//
+//               Publicar não é o destino obrigatório de uma fotografia.
+//
+//    venda    → true  = mostra tamanhos, molduras, preço e botão de compra
+//               false = mostra apenas a ficha da obra (título, local,
+//                       ano, série, texto) e um contato discreto.
+//
+//               Nem toda fotografia deve virar produto. Imagens de
+//               manifestações, de pessoas identificáveis que não deram
+//               consentimento para uso comercial, ou de trabalho
+//               documental que você quer levar a edital e exposição
+//               ficam mais fortes — e mais seguras — sem preço ao lado.
 //
 // ───────────────────────────────────────────────────────────────────
 export const COLECAO = [
@@ -146,6 +187,12 @@ export const COLECAO = [
     texto:
       "Os leques abertos contra o sol, a multidão que ocupa a avenida. Aqui a luta não pede licença: ela vira festa, e a festa vira território. Presença coletiva que recusa o apagamento — o corpo na rua como manifesto.",
     img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/_MG_1532_j5ea1j",
+    visivel: true,
+    // PROPOSTA, não decisão: manifestação com pessoas identificáveis.
+    // Preço e seletor de moldura ao lado de manifestantes lê como
+    // decoração e levanta questão de consentimento. Para reverter,
+    // troque false por true.
+    venda: false,
   },
   {
     id: "theatro-municipal",
@@ -156,6 +203,8 @@ export const COLECAO = [
     texto:
       "A arquitetura como memória pública. O Theatro permanece — testemunha de um centro que insiste em ser de todos. Pedra, sombra e a luz baixa de fim de tarde.",
     img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/Theatro_akmem3",
+    visivel: true,
+    venda: true,
   },
   {
     id: "rastros-em-movimento",
@@ -166,6 +215,8 @@ export const COLECAO = [
     texto:
       "O corpo que atravessa deixa rastro. A imagem não congela o instante — ela testemunha a travessia. Luz como memória viva, tempo que respira dentro do quadro.",
     img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/20260309_183622_zgywh1",
+    visivel: true,
+    venda: true,
   },
   {
     id: "reflexos-da-noite",
@@ -176,5 +227,7 @@ export const COLECAO = [
     texto:
       "A cidade noturna se duplica na água e na luz. Reflexo é também resistência: o que se vê duas vezes não se esquece. Atmosfera, deslocamento, a noite como matéria visual.",
     img: "https://res.cloudinary.com/dajbcvlcu/image/upload/f_auto,q_auto/20251212_192918_xuvsy6",
+    visivel: true,
+    venda: true,
   },
 ];

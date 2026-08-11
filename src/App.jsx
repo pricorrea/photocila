@@ -12,6 +12,15 @@ const SANS  = '"Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Ari
 const brl = (n) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+// Pede ao Cloudinary uma versão da imagem na largura certa.
+// Sem isso, cada miniatura baixa o arquivo original inteiro.
+const img = (url, w) =>
+  url.includes("/upload/") ? url.replace("/upload/", `/upload/w_${w},c_limit/`) : url;
+
+// O site só enxerga o que está publicado. O resto permanece no arquivo.
+const VISIVEIS = COLECAO.filter((p) => p.visivel !== false);
+const SERIES_PUBLICADAS = SERIES.filter((s) => s.publicada !== false);
+
 // Monta o link de WhatsApp com a mensagem já preenchida
 function linkWhatsApp(foto, tamanho, moldura, total) {
   const msg =
@@ -24,9 +33,17 @@ function linkWhatsApp(foto, tamanho, moldura, total) {
   return `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent(msg)}`;
 }
 
+// Contato sem preço — para obras que estão no arquivo, não à venda
+function linkContato(foto) {
+  const msg =
+    `Olá, Priscila! Gostaria de falar sobre esta fotografia:\n\n` +
+    `• Obra: ${foto.titulo} (${foto.local}, ${foto.ano})`;
+  return `https://wa.me/${PERFIL.whatsapp}?text=${encodeURIComponent(msg)}`;
+}
+
 // Retorna as fotos de uma série específica
 function fotosDaSerie(serieId) {
-  return COLECAO.filter((p) => p.serieId === serieId);
+  return VISIVEIS.filter((p) => p.serieId === serieId);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -55,7 +72,7 @@ export default function App() {
       {view.page === "serie"    && <SeriePage serieId={view.serieId} nav={nav} />}
       {view.page === "photo"    && (
         <PhotoPage
-          photo={COLECAO.find((p) => p.id === view.id)}
+          photo={VISIVEIS.find((p) => p.id === view.id)}
           nav={nav}
         />
       )}
@@ -97,7 +114,7 @@ function NavLink({ children, onClick }) {
 // HOME
 // ─────────────────────────────────────────────────────────────────
 function Home({ nav }) {
-  const hero = COLECAO.find((p) => p.id === "luta-em-festa") || COLECAO[0];
+  const hero = VISIVEIS.find((p) => p.id === "luta-em-festa") || VISIVEIS[0];
 
   return (
     <main>
@@ -128,7 +145,7 @@ function Home({ nav }) {
         <h2 style={{ fontFamily: SERIF, fontWeight: 500, fontSize: "clamp(28px, 4vw, 46px)", margin: "0 0 64px", letterSpacing: "-0.01em" }}>Séries temáticas</h2>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2px" }}>
-          {SERIES.map((serie) => {
+          {SERIES_PUBLICADAS.map((serie) => {
             const fotos = fotosDaSerie(serie.id);
             const capa  = fotos[0];
             return (
@@ -153,7 +170,7 @@ function Colecoes({ nav }) {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "56px 40px" }}>
-        {SERIES.map((serie) => {
+        {SERIES_PUBLICADAS.map((serie) => {
           const fotos = fotosDaSerie(serie.id);
           const capa  = fotos[0];
           return (
@@ -183,8 +200,9 @@ function SerieCard({ serie, capa, onClick, showDesc }) {
       <div style={{ width: "100%", overflow: "hidden", background: "#f6f6f6", aspectRatio: "4 / 3", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
         {temFotos ? (
           <img
-            src={capa.img}
+            src={img(capa.img, 800)}
             alt={serie.nome}
+            loading="lazy"
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transform: h ? "scale(1.03)" : "scale(1)", transition: "transform 1.1s cubic-bezier(.16,1,.3,1)", filter: h ? "none" : "grayscale(8%)" }}
           />
         ) : (
@@ -260,14 +278,15 @@ function SeriePage({ serieId, nav }) {
 // FOTO INDIVIDUAL — mantém a ficha de catálogo de museu
 // ─────────────────────────────────────────────────────────────────
 function PhotoPage({ photo, nav }) {
-  const [tam, setTam] = useState(TAMANHOS[2]);
+  const [tam, setTam] = useState(TAMANHOS.find((t) => t.padrao) || TAMANHOS[0]);
   const [mol, setMol] = useState(MOLDURAS[0]);
   if (!photo) return null;
 
   const total      = tam.preco + mol.add;
   const acombinar  = tam.acombinar;
+  const aVenda     = photo.venda !== false;
   const serie      = SERIES.find((s) => s.id === photo.serieId);
-  const outras = COLECAO.filter((p) => p.id !== photo.id && p.serieId === photo.serieId).slice(0, 2);
+  const outras = VISIVEIS.filter((p) => p.id !== photo.id && p.serieId === photo.serieId).slice(0, 2);
 
   return (
     <main style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 32px 60px" }}>
@@ -277,7 +296,7 @@ function PhotoPage({ photo, nav }) {
       <div className="photo-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.5fr) minmax(280px, 1fr)", gap: 72, marginTop: 40, alignItems: "start" }}>
         {/* Imagem */}
         <div style={{ background: "#f6f6f6" }}>
-          <img src={photo.img} alt={photo.titulo} style={{ width: "100%", display: "block", objectFit: "cover" }} />
+          <img src={img(photo.img, 1600)} alt={photo.titulo} style={{ width: "100%", display: "block", objectFit: "cover" }} />
         </div>
 
         {/* Ficha de catálogo */}
@@ -287,35 +306,54 @@ function PhotoPage({ photo, nav }) {
           <p style={{ fontFamily: SERIF, fontSize: 18, lineHeight: 1.6, opacity: 0.82, margin: "0 0 40px" }}>{photo.texto}</p>
 
           <Spec label="Série">{serie ? serie.nome : photo.serieId}</Spec>
-          <Spec label="Edição">Tiragem limitada · numerada e assinada</Spec>
-          <Spec label="Impressão">Fine art, papel algodão</Spec>
+          {aVenda ? (
+            <>
+              <Spec label="Edição">Tiragem limitada · numerada e assinada</Spec>
+              <Spec label="Impressão">Fine art, papel algodão</Spec>
+            </>
+          ) : (
+            <Spec label="Estado">Obra de arquivo</Spec>
+          )}
 
           <div style={{ height: 1, background: "#ededed", margin: "32px 0" }} />
 
-          <FieldLabel>Tamanho</FieldLabel>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
-            {TAMANHOS.map((s) => <Chip key={s.id} active={tam.id === s.id} onClick={() => setTam(s)}>{s.label}</Chip>)}
-          </div>
+          {aVenda ? (
+            <>
+              <FieldLabel>Tamanho</FieldLabel>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
+                {TAMANHOS.map((s) => <Chip key={s.id} active={tam.id === s.id} onClick={() => setTam(s)}>{s.label}</Chip>)}
+              </div>
 
-          <FieldLabel>Moldura</FieldLabel>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 36 }}>
-            {MOLDURAS.map((f) => <Chip key={f.id} active={mol.id === f.id} onClick={() => setMol(f)}>{f.label}</Chip>)}
-          </div>
+              <FieldLabel>Moldura</FieldLabel>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 36 }}>
+                {MOLDURAS.map((f) => <Chip key={f.id} active={mol.id === f.id} onClick={() => setMol(f)}>{f.label}</Chip>)}
+              </div>
 
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
-            <span style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.5 }}>{tam.dim !== "—" ? tam.dim : "Polaroid"}</span>
-            <span style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 500 }}>
-              {acombinar ? "A combinar" : brl(total)}
-            </span>
-          </div>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
+                <span style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.5 }}>{tam.dim !== "—" ? tam.dim : "Polaroid"}</span>
+                <span style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 500 }}>
+                  {acombinar ? "A combinar" : brl(total)}
+                </span>
+              </div>
 
-          <a href={linkWhatsApp(photo, tam, mol, total)} target="_blank" rel="noopener noreferrer"
-            style={{ display: "block", textAlign: "center", padding: "16px", background: "#0a0a0a", color: "#fff", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", transition: "opacity .3s" }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.78")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
-            Adquirir pelo WhatsApp
-          </a>
-          <p style={{ fontSize: 11, opacity: 0.4, textAlign: "center", marginTop: 14, letterSpacing: "0.03em" }}>Produção sob encomenda · combinamos tudo na conversa</p>
+              <a href={linkWhatsApp(photo, tam, mol, total)} target="_blank" rel="noopener noreferrer"
+                style={{ display: "block", textAlign: "center", padding: "16px", background: "#0a0a0a", color: "#fff", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none", transition: "opacity .3s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.78")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+                Adquirir pelo WhatsApp
+              </a>
+              <p style={{ fontSize: 11, opacity: 0.4, textAlign: "center", marginTop: 14, letterSpacing: "0.03em" }}>Produção sob encomenda · combinamos tudo na conversa</p>
+            </>
+          ) : (
+            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, opacity: 0.55, lineHeight: 1.6, margin: 0 }}>
+              Esta fotografia integra o arquivo e não está disponível para venda.
+              Para uso editorial, curatorial ou expositivo,{" "}
+              <a href={linkContato(photo)} target="_blank" rel="noopener noreferrer"
+                style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: 3 }}>
+                entre em contato
+              </a>.
+            </p>
+          )}
         </div>
       </div>
 
@@ -372,8 +410,9 @@ function Sobre({ nav }) {
         {PERFIL.foto && (
           <div style={{ position: "sticky", top: 96 }}>
             <img
-              src={PERFIL.foto}
+              src={img(PERFIL.foto, 900)}
               alt={PERFIL.nome}
+              loading="lazy"
               style={{ width: "100%", display: "block", objectFit: "cover", aspectRatio: "3 / 4", background: "#f6f6f6" }}
             />
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, opacity: 0.45, marginTop: 12, textAlign: "center" }}>{PERFIL.nome}</p>
@@ -411,7 +450,7 @@ function FullBleed({ photo, onClick }) {
   return (
     <button onClick={onClick} style={{ ...reset, display: "block", width: "100%", cursor: "pointer" }}>
       <div style={{ width: "100%", overflow: "hidden" }}>
-        <img src={photo.img} alt={photo.titulo} style={{ width: "100%", height: "82vh", objectFit: "cover", display: "block" }} />
+        <img src={img(photo.img, 2000)} alt={photo.titulo} style={{ width: "100%", height: "82vh", objectFit: "cover", display: "block" }} />
       </div>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "18px 32px 0", display: "flex", justifyContent: "space-between", fontSize: 12, letterSpacing: "0.06em", opacity: 0.6 }}>
         <span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, opacity: 1 }}>{photo.titulo}</span>
@@ -427,7 +466,7 @@ function GalleryItem({ photo, onClick }) {
     <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
       style={{ ...reset, textAlign: "left", cursor: "pointer", width: "100%" }}>
       <div style={{ width: "100%", overflow: "hidden", background: "#f6f6f6" }}>
-        <img src={photo.img} alt={photo.titulo}
+        <img src={img(photo.img, 800)} alt={photo.titulo} loading="lazy"
           style={{ width: "100%", aspectRatio: "4 / 5", objectFit: "cover", display: "block", transform: h ? "scale(1.03)" : "scale(1)", transition: "transform 1.1s cubic-bezier(.16,1,.3,1)", filter: h ? "none" : "grayscale(8%)" }} />
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 16, gap: 16 }}>
