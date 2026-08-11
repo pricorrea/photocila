@@ -24,3 +24,5 @@ Cada alteração salva aqui é republicada automaticamente.
 npm install
 npm run dev
 ```
+
+Acesso no Vercel é com o SSO Google photocila@gmail.com
